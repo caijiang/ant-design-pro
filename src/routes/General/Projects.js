@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Card, Button, Icon, List, message, Form, Row, Col, Input } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -80,6 +81,16 @@ export default class CardList extends PureComponent {
     );
 
     const { openNewProject } = this.state;
+    const editHelper = (item) => {
+      // 如果是高级模式，那么就直接推送layer
+      if (item.apiType === 'advanced') {
+        const go = () => {
+          this.props.dispatch(routerRedux.push(`/editor/${item.id}/${item.branch}`));
+        };
+        return <a onClick={go}>高级编辑API</a>;
+      }
+      return <a href={item.editorUrl} target="_blank">编辑API</a>;
+    };
 
     // 允许操作 设置默认分支，获取默认地址
     // https://github.com/nkbt/react-copy-to-clipboard
@@ -97,7 +108,7 @@ export default class CardList extends PureComponent {
             dataSource={['', ...list]}
             renderItem={item => (item ? (
               <List.Item key={item.id}>
-                <Card hoverable className={styles.card} actions={[<a href={item.editorUrl} target="_blank">编辑API</a>, <a>设置默认分支</a>]}>
+                <Card hoverable className={styles.card} actions={[editHelper(item), <a>设置默认分支</a>]}>
                   <Card.Meta
                     avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
                     title={<a href="#">{item.id}</a>}

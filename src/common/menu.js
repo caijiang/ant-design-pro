@@ -9,7 +9,7 @@ const menuData = [{
   }, {
     icon: 'database',
     name: '项目管理',
-    path: 'projets',
+    path: 'projects',
   }],
 // }, {
 //   name: 'dashboard',
