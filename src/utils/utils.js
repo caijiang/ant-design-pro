@@ -132,3 +132,21 @@ export function getRoutes(path, routerData) {
   });
   return renderRoutes;
 }
+
+/**
+ * 删除id
+ * @param {object} 原数据
+ * @param {string | Array<String>} id 要删除的属性
+ * @returns {object} 新的数据
+ */
+export function deleteProperty({ [id]: deleted, ...newState }, id) {
+  if (id.constructor.name === 'Array') {
+    // 每一个都执行一次
+    let current = newState;
+    id.forEach((newId) => {
+      current = deleteProperty(current, newId);
+    });
+    return current;
+  }
+  return newState;
+}

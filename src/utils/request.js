@@ -72,6 +72,99 @@ export default function request(url, options) {
     });
 }
 
+export function errorWithResponse(response, msg) {
+  const error = new Error(msg);
+  error.response = response;
+  return error;
+}
+function onlyJson(response) {
+  const type = response.headers.get('Content-Type');
+  if (type && type.indexOf('application/json') !== -1) {
+    return response;
+  }
+  throw errorWithResponse(response, `except application/json, but ${type}`);
+}
+function parseJSON(response) {
+  return response.json();
+}
+
+/**
+ * 请求一个json结果
+ * @param {string} url The URL we want to request
+ * @param {object} options The options we want to pass to "fetch"
+ */
+export function requestJson(url, options) {
+  const currentHeaders = (options || {}).headers;
+  return classicRequest(url, {
+    ...options,
+    headers: {
+      ...currentHeaders,
+      Accept: 'application/json',
+    },
+  }).then(onlyJson).then(parseJSON);
+}
+
+
+function uploadJsonContent(url, method, data, options) {
+  const currentHeaders = (options || {}).headers;
+  return classicRequest(url, {
+    ...options,
+    method,
+    headers: {
+      ...currentHeaders,
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * put data 到url
+ * @param {String} url 请求的地址
+ * @param {*} data 要提交的content
+ * @param {*} options The options we want to pass to "fetch"
+ */
+export function putJson(url, data, options) {
+  return uploadJsonContent(url, 'PUT', data, options);
+}
+
+/**
+ * post data 到url
+ * @param {String} url 请求的地址
+ * @param {*} data 要提交的content
+ * @param {*} options The options we want to pass to "fetch"
+ */
+export function postJson(url, data, options) {
+  return uploadJsonContent(url, 'POST', data, options);
+}
+
+/**
+ * post data 到url
+ * @param {String} url 请求的地址
+ * @param {*} data 要提交的content
+ * @param {*} options The options we want to pass to "fetch"
+ */
+export function postJsonForJson(url, data, options) {
+  return postJson(url, data, options).then(onlyJson).then(parseJSON);
+}
+
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+export function classicRequest(url, options) {
+  const targetUrl = url;
+  const defaultOptions = {
+    credentials: 'include',
+    cache: 'no-cache',
+  };
+  const newOptions = { ...defaultOptions, ...options };
+  return fetch(targetUrl, newOptions);
+}
+
 export function normalRequest(url, options) {
   const defaultOptions = {
     credentials: 'include',

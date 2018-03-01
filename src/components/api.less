@@ -1,0 +1,94 @@
+// Methods
+@color-post: #49cc90;
+@color-get: #61affe;
+@color-put: #fca130;
+@color-delete: #f93e3e;
+@color-head: #9012fe;
+@color-patch: #50e3c2;
+@color-trace: #ebebeb;
+@color-options: #0d5aa7;
+
+// 整个title框架
+.entry-title(@color) {
+  background: lighten(@color, 35%);
+}
+// 方法
+.method-name(@color) {
+  background: @color;
+  color: #fff;
+  // width: 130px;
+  // padding: 5px;
+  // text-align: left;
+}
+.entryTitle_editing {
+  border-color: #f93e3e;
+  border-style: solid;
+}
+.entryTitle_submitted {
+  border-color: #50e3c2;
+  border-style: solid;
+}
+.entryTitle_recalling {
+  border-color: #fca130;
+  border-style: solid;
+}
+.entryTitle_deprecated {
+  text-decoration: line-through;
+}
+
+.entryTitle_post {
+  .entry-title(@color-post);
+}
+.methodName_post {
+  .method-name(@color-post);
+}
+
+.entryTitle_get {
+  .entry-title(@color-get);
+}
+.methodName_get {
+  .method-name(@color-get);
+}
+
+.entryTitle_put {
+  .entry-title(@color-put);
+}
+.methodName_put {
+  .method-name(@color-put);
+}
+
+.entryTitle_delete {
+  .entry-title(@color-delete);
+}
+.methodName_delete {
+  .method-name(@color-delete);
+}
+
+.entryTitle_head {
+  .entry-title(@color-head);
+}
+.methodName_head {
+  .method-name(@color-head);
+}
+
+.entryTitle_patch {
+  .entry-title(@color-patch);
+}
+.methodName_patch {
+  .method-name(@color-patch);
+}
+
+.entryTitle_trace {
+  .entry-title(@color-trace);
+}
+.methodName_trace {
+  .method-name(@color-trace);
+}
+
+.entryTitle_options {
+  .entry-title(@color-options);
+}
+.methodName_options {
+  .method-name(@color-options);
+}
+

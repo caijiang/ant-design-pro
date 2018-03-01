@@ -129,7 +129,13 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['projects'], () => import('../routes/General/Projects')),
     },
     '/editor/:name/:branch': {
-      component: dynamicWrapper(app, [], () => import('../routes/Editor/APIEditor')),
+      component: dynamicWrapper(app, ['projectSchema'], () => import('../routes/Editor/Layout')),
+    },
+    '/editor/:name/:branch/index': {
+      component: dynamicWrapper(app, ['projectSchema'], () => import('../routes/Editor/Index')),
+    },
+    '/editor/:name/:branch/api/:id/:method': {
+      component: dynamicWrapper(app, ['projectSchema'], () => import('../routes/Editor/APIEditor')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
