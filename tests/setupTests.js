@@ -6,6 +6,9 @@ global.requestAnimationFrame =
 import { JSDOM } from 'jsdom';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { updateUrlPrefix } from '../src/utils/request';
+
+updateUrlPrefix('http://localhost:9090');
 
 Enzyme.configure({ adapter: new Adapter() });
 

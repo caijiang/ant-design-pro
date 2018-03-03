@@ -150,3 +150,11 @@ export function deleteProperty({ [id]: deleted, ...newState }, id) {
   }
   return newState;
 }
+
+/**
+ * @param {string} type dispatch事件
+ * @returns {string} 命名空间
+ */
+export function getNamespace(type) {
+  return type.substring(0, type.indexOf('/'));
+}

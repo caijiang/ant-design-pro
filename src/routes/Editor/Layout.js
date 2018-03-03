@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
-import { Button, Layout, Tree, Icon, Input, Spin } from 'antd';
+import { Button, Layout, Tree, Icon, Input, Spin, Popconfirm, Tooltip } from 'antd';
 import { toPaths, filterPath } from '../../models/projectSchema';
 import NotFound from '../../routes/Exception/404';
 import { getRoutes } from '../../utils/utils';
 import APIParentHead from '../../components/APIParentHead';
 import APITitle from '../../components/APITitle';
 import styles from '../../index.less';
+import apiStyles from '../../components/api.less';
 
 const { Content, Sider } = Layout;
 const { TreeNode } = Tree;
@@ -40,7 +41,8 @@ export default class APILayout extends PureComponent {
    */
   renderSider = () => {
     const prefix = this.routePrefix();
-    const { projectSchema: { schema, filterText }, projectSchema, dispatch } = this.props;
+    const { projectSchema: { schema, schema: { version }, filterText }, projectSchema
+      , dispatch } = this.props;
     const pathsNode = (
       <TreeNode
         disableCheckbox={false}
@@ -86,7 +88,19 @@ export default class APILayout extends PureComponent {
         >
           {pathsNode}
         </Tree>
-        <Button>发布？</Button>
+        <div style={{ alignSelf: 'center' }}>
+          {version ? (
+            <Tooltip title="当前版本">
+              <span className={apiStyles.releasedVersion}>{version}</span>
+            </Tooltip>
+          ) :
+          (
+            <Popconfirm title="确定要发布该版本？发布之后将被锁定修改。">
+              <Button >发布！</Button>
+            </Popconfirm>
+          )
+        }
+        </div>
       </Sider>
     );
   }

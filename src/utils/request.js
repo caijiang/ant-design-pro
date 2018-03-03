@@ -41,6 +41,12 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
+  let targetUrl;
+  if (urlPrefix) {
+    targetUrl = urlPrefix + url;
+  } else {
+    targetUrl = url;
+  }
   const defaultOptions = {
     credentials: 'include',
   };
@@ -54,7 +60,7 @@ export default function request(url, options) {
     newOptions.body = JSON.stringify(newOptions.body);
   }
 
-  return fetch(url, newOptions)
+  return fetch(targetUrl, newOptions)
     .then(checkStatus)
     .then((response) => {
       const type = response.headers.get('Content-Type');
@@ -77,14 +83,14 @@ export function errorWithResponse(response, msg) {
   error.response = response;
   return error;
 }
-function onlyJson(response) {
+export function onlyJson(response) {
   const type = response.headers.get('Content-Type');
   if (type && type.indexOf('application/json') !== -1) {
     return response;
   }
   throw errorWithResponse(response, `except application/json, but ${type}`);
 }
-function parseJSON(response) {
+export function parseJSON(response) {
   return response.json();
 }
 
@@ -156,7 +162,12 @@ export function postJsonForJson(url, data, options) {
  * @return {object}           An object containing either "data" or "err"
  */
 export function classicRequest(url, options) {
-  const targetUrl = url;
+  let targetUrl;
+  if (urlPrefix) {
+    targetUrl = urlPrefix + url;
+  } else {
+    targetUrl = url;
+  }
   const defaultOptions = {
     credentials: 'include',
     cache: 'no-cache',
@@ -166,6 +177,12 @@ export function classicRequest(url, options) {
 }
 
 export function normalRequest(url, options) {
+  let targetUrl;
+  if (urlPrefix) {
+    targetUrl = urlPrefix + url;
+  } else {
+    targetUrl = url;
+  }
   const defaultOptions = {
     credentials: 'include',
   };
@@ -179,7 +196,7 @@ export function normalRequest(url, options) {
   //   newOptions.body = JSON.stringify(newOptions.body);
   // }
 
-  return fetch(url, newOptions)
+  return fetch(targetUrl, newOptions)
     // .then(checkStatus)
     .then((response) => {
       if (newOptions.method === 'DELETE' || response.status === 204) {
@@ -187,4 +204,28 @@ export function normalRequest(url, options) {
       }
       return response.json();
     });
+}
+
+
+/**
+ * @param {ServerResponse} response 响应
+ * @returns {boolean} 只要是2开头的响应那就是true
+ */
+export function trueOnSuccessful(response) {
+  if (!response.ok) {
+    // console.warn(response);
+    throw errorWithResponse(response, `bad response status:${response.status}`);
+  }
+  return response.ok;
+}
+
+
+let urlPrefix;
+
+/**
+ * 指定url前缀
+ * @param {String} url url前缀
+ */
+export function updateUrlPrefix(url) {
+  urlPrefix = url;
 }
